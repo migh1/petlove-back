@@ -1,6 +1,22 @@
 import { NextFunction, Request, Response } from 'express';
 import axios from '../config/axios';
 
+interface viacep {
+  data: {
+    cep?: string;
+    logradouro?: string;
+    complemento?: string;
+    bairro?: string;
+    localidade?: string;
+    uf?: string;
+    ibge?: string;
+    gia?: string;
+    ddd?: string;
+    siafi?: string;
+    erro?: boolean;
+  };
+}
+
 const sanitize_cep = (cep: string) => cep.replace(/\D/g, '');
 const validate_cep = (sanitized_cep: string) => sanitized_cep.length === 8;
 
@@ -24,7 +40,7 @@ export default {
     try {
       const {
         data: { erro, cep, logradouro, localidade, uf },
-      }: any = await axios.get(`/${sanitized_cep}/json/`);
+      }: viacep = await axios.get(`/${sanitized_cep}/json/`);
 
       if (erro) return res.status(406).send();
 
